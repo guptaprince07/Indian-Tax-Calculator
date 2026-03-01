@@ -47,74 +47,66 @@ function calculateInNewTab() {
     win.document.write(`
         <html>
         <head>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
             <title>Tax Summary FY 2026-27</title>
             <style>
+                * { box-sizing: border-box; }
                 body { 
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-                    background-color: #f8f9fa; 
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+                    background-color: #f0f2f5; 
                     display: flex; 
                     justify-content: center; 
-                    padding: 20px; 
+                    align-items: flex-start; /* Better for mobile scrolling */
+                    padding: 15px; 
                     margin: 0; 
+                    min-height: 100vh;
                 }
                 .card {
                     background: white;
-                    width: 100%;
-                    max-width: 450px;
-                    padding: 30px;
-                    border-radius: 12px;
-                    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-                    color: #333;
+                    width: 100%; /* Makes it use full width on mobile */
+                    max-width: 400px; /* Keeps it from getting too wide on desktop */
+                    padding: 24px;
+                    border-radius: 16px;
+                    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+                    color: #1e293b;
                 }
-                h2 { color: #1e3a8a; border-bottom: 2px solid #eef2ff; padding-bottom: 15px; margin-top: 0; font-size: 22px; }
-                .row { display: flex; justify-content: space-between; margin: 15px 0; font-size: 16px; align-items: center; }
+                h2 { color: #1e3a8a; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin: 0 0 20px 0; font-size: 20px; text-align: center; }
+                .row { display: flex; justify-content: space-between; margin: 12px 0; font-size: 15px; }
                 .label { color: #64748b; }
-                .value { font-weight: 500; color: #1e293b; }
-                
-                .highlight-red { color: #dc2626; font-weight: bold; }
-                .highlight-green { color: #059669; font-weight: bold; font-size: 20px; }
-                
-                .divider { border-top: 1px solid #e2e8f0; margin: 20px 0; }
-                
-                .footer-text { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 25px; line-height: 1.5; }
-                
+                .value { font-weight: 600; color: #1e293b; }
+                .divider { border-top: 1px solid #e2e8f0; margin: 18px 0; }
+                .highlight-red { color: #be123c; font-weight: 700; }
+                .highlight-green { color: #059669; font-weight: 700; font-size: 19px; }
+                .footer-text { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 20px; line-height: 1.4; }
                 .print-btn { 
                     width: 100%; 
-                    padding: 14px; 
+                    padding: 16px; 
                     background: #1e3a8a; 
                     color: white; 
                     border: none; 
-                    border-radius: 8px;
+                    border-radius: 12px;
                     margin-top: 20px; 
                     cursor: pointer; 
-                    font-weight: bold;
+                    font-weight: 700;
                     font-size: 16px;
+                    -webkit-tap-highlight-color: transparent;
                 }
-                @media print { .print-btn { display: none; } body { background: white; padding: 0; } .card { box-shadow: none; border: none; } }
+                @media print { .print-btn { display: none; } body { background: white; padding: 0; } }
             </style>
         </head>
         <body>
             <div class="card">
                 <h2>Tax Summary (FY 2026-27)</h2>
-                
-                <div class="row"><span class="label">Gross Income:</span> <span class="value">₹${income.toLocaleString('en-IN')}</span></div>
-                <div class="row"><span class="label">Standard Deduction:</span> <span class="value">- ₹${stdDeduction.toLocaleString('en-IN')}</span></div>
-                <div class="row"><span class="label">Taxable Amount:</span> <span class="value">₹${taxableAmount.toLocaleString('en-IN')}</span></div>
-                
+                <div class="row"><span class="label">Gross Income</span> <span class="value">₹${income.toLocaleString('en-IN')}</span></div>
+                <div class="row"><span class="label">Std. Deduction</span> <span class="value">- ₹75,000</span></div>
+                <div class="row"><span class="label">Taxable Amount</span> <span class="value">₹${taxableAmount.toLocaleString('en-IN')}</span></div>
                 <div class="divider"></div>
-                
-                <div class="row"><span class="label" style="color:#dc2626;">Basic Income Tax:</span> <span class="highlight-red">₹${basicTax.toLocaleString('en-IN')}</span></div>
-                <div class="row"><span class="label">Health & Edu Cess (4%):</span> <span class="value">₹${cess.toLocaleString('en-IN')}</span></div>
-                <div class="row" style="font-weight:bold;"><span class="label" style="color:#1e293b;">Total Tax Outflow:</span> <span class="value">₹${totalTax.toLocaleString('en-IN')}</span></div>
-                
-                <div class="row" style="margin-top:25px;">
-                    <span class="label" style="color:#059669; font-weight:bold;">Annual Net Salary:</span> 
-                    <span class="highlight-green">₹${netSalary.toLocaleString('en-IN')}</span>
-                </div>
-                
-                <p class="footer-text">Results calculated under the New Tax Regime (Default) as per 2026 rules.</p>
-                
+                <div class="row"><span class="label">Basic Income Tax</span> <span class="highlight-red">₹${basicTax.toLocaleString('en-IN')}</span></div>
+                <div class="row"><span class="label">Cess (4%)</span> <span class="value">₹${cess.toLocaleString('en-IN')}</span></div>
+                <div class="row" style="margin-top:15px;"><span class="label" style="font-weight:700; color:#1e293b;">Total Tax</span> <span class="value" style="font-size:17px;">₹${totalTax.toLocaleString('en-IN')}</span></div>
+                <div class="divider"></div>
+                <div class="row"><span class="label" style="color:#059669; font-weight:700;">Annual Net Salary</span> <span class="highlight-green">₹${netSalary.toLocaleString('en-IN')}</span></div>
+                <p class="footer-text">Calculated under New Tax Regime rules for 2026.</p>
                 <button class="print-btn" onclick="window.print()">PRINT SUMMARY</button>
             </div>
         </body>
@@ -122,3 +114,4 @@ function calculateInNewTab() {
     `);
     win.document.close();
 }
+
