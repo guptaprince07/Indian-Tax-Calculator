@@ -113,5 +113,7 @@ function calculateInNewTab() {
         </html>
     `);
     win.document.close();
+    win.focus();
 }
+
 
