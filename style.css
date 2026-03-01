@@ -3,9 +3,18 @@ body {
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    /* Remove align-items: center; (this pushes the top off-screen on small phones) */
+    align-items: flex-start; /* Start from the top */
+    min-height: 100vh; /* Use min-height so it can grow if needed */
     margin: 0;
+    padding: 20px 0; /* Gives space at top and bottom for scrolling */
+}
+header img, img {
+    width: 100%;        
+    max-width: 120px;   
+    height: auto;       
+    display: block;
+    margin: 0 auto 15px auto; 
 }
 
 .calculator-card {
@@ -26,6 +35,23 @@ body {
 @media (max-width: 350px) {
     .button-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+}
+/* Specific adjustments for Jio Phone 2 (240px width) */
+@media (max-width: 280px) {
+    .calculator-card {
+        padding: 10px;
+        width: 95%; /* Use more width on tiny screens */
+    }
+    h1 {
+        font-size: 1.2rem; /* Shrink title so it doesn't take up the whole screen */
+    }
+    .button-grid {
+        grid-template-columns: 1fr; /* Stack buttons in 1 column on tiny screens */
+    }
+    .alt-btn {
+        padding: 5px;
+        font-size: 0.75rem;
     }
 }
 
