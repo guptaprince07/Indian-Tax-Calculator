@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Tax Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+
+    <div class="calculator-card">
+        <img src="https://img.freepik.com/premium-vector/black-white-line-art-icon-tax-form_925376-301339.jpg" 
+        height="120px"
+        alt="TAX">
+        <h1>Indian Tax Calculator</h1>
+        <p>New Tax Regime (FY 2026-27)</p>
+        
+        <div class="input-group">
+            <label>Annual Gross Salary (₹)</label>
+            <input type="text" id="incomeInput" placeholder="Enter Amount (eg ₹12,00,000)" oninput="formatIndianCurrency(this)">
+        </div>
+
+        <div class="quick-select">
+            <p>Or Quick Select:</p>
+            <div class="button-grid">
+                <button type="button" class="alt-btn" onclick="quickFill(1200000)">12 Lakh</button>
+                <button type="button" class="alt-btn" onclick="quickFill(1500000)">15 Lakh</button>
+                <button type="button" class="alt-btn" onclick="quickFill(2000000)">20 Lakh</button>
+                <button type="button" class="alt-btn" onclick="quickFill(2500000)">25 Lakh</button>
+                <button type="button" class="alt-btn" onclick="quickFill(3000000)">30 Lakh</button>
+            </div>
+        </div>
+
+        <button class="main-calc-btn" onclick="calculateInNewTab()">Calculate Tax</button>
+        <p class="note">*Standard Deduction of ₹75,000 applied automatically.</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
