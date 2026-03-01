@@ -1,87 +1,124 @@
-// Function to format the input field as Indian Currency (1,00,000)
-function formatIndianCurrency(input) {
-    // Remove all non-numeric characters except the decimal point
-    let value = input.value.replace(/,/g, '');
-    if (value === "") return;
-
-    // Convert to number and back to string with Indian locale formatting
-    let x = parseFloat(value);
-    if (!isNaN(x)) {
-        input.value = x.toLocaleString('en-IN');
-    }
-}
-
-// Function to fill the input field when a quick-select button is clicked
-function quickFill(value) {
+// 1. QUICK FILL BUTTONS: This makes the 12L, 15L, etc. buttons work
+function quickFill(num) {
     const input = document.getElementById('incomeInput');
-    input.value = value.toLocaleString('en-IN');
+    input.value = num.toLocaleString('en-IN');
+    formatIndianCurrency(input); // Formats with commas immediately
 }
 
+// 2. CURRENCY FORMATTING: Adds commas as the user types
+function formatIndianCurrency(input) {
+    let val = input.value.replace(/,/g, '');
+    if (val === "") return;
+    let x = parseFloat(val);
+    if (!isNaN(x)) input.value = x.toLocaleString('en-IN');
+}
+
+// 3. CALCULATION & RESPONSIVE SUMMARY CARD:
 function calculateInNewTab() {
-    // Clean the commas before doing math
     const rawValue = document.getElementById('incomeInput').value.replace(/,/g, '');
-    const grossIncome = parseFloat(rawValue);
+    const income = parseFloat(rawValue);
     
-    if (isNaN(grossIncome) || grossIncome <= 0) {
-        alert("Please enter a valid salary amount.");
+    if (!income || income <= 0) {
+        alert("Please enter a valid salary amount");
         return;
     }
 
-    // --- 2026 TAX LOGIC ---
     const stdDeduction = 75000;
-    let taxableIncome = Math.max(0, grossIncome - stdDeduction);
+    const taxableAmount = Math.max(0, income - stdDeduction);
+    let basicTax = 0;
 
-    let tax = 0;
-    // Slabs: 0-4L(0%), 4-8L(5%), 8-12L(10%), 12-16L(15%), 16-20L(20%), 20-24L(25%), >24L(30%)
-    if (taxableIncome > 2400000) tax = (taxableIncome - 2400000) * 0.30 + 300000;
-    else if (taxableIncome > 2000000) tax = (taxableIncome - 2000000) * 0.25 + 200000;
-    else if (taxableIncome > 1600000) tax = (taxableIncome - 1600000) * 0.20 + 120000;
-    else if (taxableIncome > 1200000) tax = (taxableIncome - 1200000) * 0.15 + 60000;
-    else if (taxableIncome > 800000) tax = (taxableIncome - 800000) * 0.10 + 20000;
-    else if (taxableIncome > 400000) tax = (taxableIncome - 400000) * 0.05;
+    // 2026 Slabs Logic
+    if (taxableAmount > 2400000) basicTax = (taxableAmount - 2400000) * 0.3 + 300000;
+    else if (taxableAmount > 2000000) basicTax = (taxableAmount - 2000000) * 0.25 + 200000;
+    else if (taxableAmount > 1600000) basicTax = (taxableAmount - 1600000) * 0.2 + 120000;
+    else if (taxableAmount > 1200000) basicTax = (taxableAmount - 1200000) * 0.15 + 60000;
+    else if (taxableAmount > 800000) basicTax = (taxableAmount - 800000) * 0.1 + 20000;
+    else if (taxableAmount > 400000) basicTax = (taxableAmount - 400000) * 0.05;
 
-    // Section 87A Rebate: Full tax rebate if taxable income is <= ₹12 Lakh
-    if (taxableIncome <= 1200000) {
-        tax = 0;
-    }
+    // 87A Rebate (Zero tax up to 12L taxable)
+    if (taxableAmount <= 1200000) basicTax = 0;
 
-    let cess = tax * 0.04;
-    let totalTax = tax + cess;
-    let takeHome = grossIncome - totalTax;
+    const cess = basicTax * 0.04;
+    const totalTax = basicTax + cess;
+    const netSalary = income - totalTax;
 
-    // Open Results Page
-    const reportWindow = window.open("", "_blank");
-    reportWindow.document.write(`
+    const win = window.open("", "_blank");
+    
+    win.document.write(`
         <html>
         <head>
-            <title>Tax Result - India 2026</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Tax Summary FY 2026-27</title>
             <style>
-                body { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 40px; background: #e9ecef; }
-                .report-box { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 450px; }
-                h2 { color: #1e3c72; border-bottom: 3px solid #f1f1f1; padding-bottom: 10px; margin-top: 0; }
-                .data-row { display: flex; justify-content: space-between; margin: 18px 0; font-size: 1.1rem; color: #444; }
-                .highlight { font-weight: bold; color: #d9534f; border-top: 2px solid #eee; padding-top: 15px; font-size: 1.2rem; }
-                .success { color: #28a745; font-weight: bold; font-size: 1.4rem; }
-                .footer-text { font-size: 0.8rem; color: #999; margin-top: 40px; text-align: center; line-height: 1.4; }
+                body { 
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                    background-color: #f8f9fa; 
+                    display: flex; 
+                    justify-content: center; 
+                    padding: 20px; 
+                    margin: 0; 
+                }
+                .card {
+                    background: white;
+                    width: 100%;
+                    max-width: 450px;
+                    padding: 30px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+                    color: #333;
+                }
+                h2 { color: #1e3a8a; border-bottom: 2px solid #eef2ff; padding-bottom: 15px; margin-top: 0; font-size: 22px; }
+                .row { display: flex; justify-content: space-between; margin: 15px 0; font-size: 16px; align-items: center; }
+                .label { color: #64748b; }
+                .value { font-weight: 500; color: #1e293b; }
+                
+                .highlight-red { color: #dc2626; font-weight: bold; }
+                .highlight-green { color: #059669; font-weight: bold; font-size: 20px; }
+                
+                .divider { border-top: 1px solid #e2e8f0; margin: 20px 0; }
+                
+                .footer-text { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 25px; line-height: 1.5; }
+                
+                .print-btn { 
+                    width: 100%; 
+                    padding: 14px; 
+                    background: #1e3a8a; 
+                    color: white; 
+                    border: none; 
+                    border-radius: 8px;
+                    margin-top: 20px; 
+                    cursor: pointer; 
+                    font-weight: bold;
+                    font-size: 16px;
+                }
+                @media print { .print-btn { display: none; } body { background: white; padding: 0; } .card { box-shadow: none; border: none; } }
             </style>
         </head>
         <body>
-            <div class="report-box">
+            <div class="card">
                 <h2>Tax Summary (FY 2026-27)</h2>
-                <div class="data-row"><span>Gross Income:</span> <span>₹${grossIncome.toLocaleString('en-IN')}</span></div>
-                <div class="data-row"><span>Standard Deduction:</span> <span>- ₹75,000</span></div>
-                <div class="data-row"><span>Taxable Amount:</span> <span>₹${taxableIncome.toLocaleString('en-IN')}</span></div>
-                <div class="data-row highlight"><span>Basic Income Tax:</span> <span>₹${tax.toLocaleString('en-IN')}</span></div>
-                <div class="data-row"><span>Health & Edu Cess (4%):</span> <span>₹${cess.toLocaleString('en-IN')}</span></div>
-                <div class="data-row" style="border-top: 1px solid #eee; padding-top: 10px;">
-                    <span>Total Tax Outflow:</span> <strong>₹${totalTax.toLocaleString('en-IN')}</strong>
+                
+                <div class="row"><span class="label">Gross Income:</span> <span class="value">₹${income.toLocaleString('en-IN')}</span></div>
+                <div class="row"><span class="label">Standard Deduction:</span> <span class="value">- ₹${stdDeduction.toLocaleString('en-IN')}</span></div>
+                <div class="row"><span class="label">Taxable Amount:</span> <span class="value">₹${taxableAmount.toLocaleString('en-IN')}</span></div>
+                
+                <div class="divider"></div>
+                
+                <div class="row"><span class="label" style="color:#dc2626;">Basic Income Tax:</span> <span class="highlight-red">₹${basicTax.toLocaleString('en-IN')}</span></div>
+                <div class="row"><span class="label">Health & Edu Cess (4%):</span> <span class="value">₹${cess.toLocaleString('en-IN')}</span></div>
+                <div class="row" style="font-weight:bold;"><span class="label" style="color:#1e293b;">Total Tax Outflow:</span> <span class="value">₹${totalTax.toLocaleString('en-IN')}</span></div>
+                
+                <div class="row" style="margin-top:25px;">
+                    <span class="label" style="color:#059669; font-weight:bold;">Annual Net Salary:</span> 
+                    <span class="highlight-green">₹${netSalary.toLocaleString('en-IN')}</span>
                 </div>
-                <div class="data-row success">
-                    <span>Annual Net Salary:</span> <span>₹${takeHome.toLocaleString('en-IN')}</span>
-                </div>
+                
                 <p class="footer-text">Results calculated under the New Tax Regime (Default) as per 2026 rules.</p>
+                
+                <button class="print-btn" onclick="window.print()">PRINT SUMMARY</button>
             </div>
         </body>
         </html>
     `);
+    win.document.close();
 }
