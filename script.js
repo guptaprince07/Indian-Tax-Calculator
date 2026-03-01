@@ -113,7 +113,11 @@ function calculateInNewTab() {
         </html>
     `);
     win.document.close();
+    win.setTimeout(() => {
+        win.dispatchEvent(new Event('resize'));
+    }, 100);
     win.focus();
 }
+
 
 
