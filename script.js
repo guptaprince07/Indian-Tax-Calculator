@@ -113,11 +113,19 @@ function calculateInNewTab() {
         </html>
     `);
     win.document.close();
-    win.setTimeout(() => {
-        win.dispatchEvent(new Event('resize'));
-    }, 100);
+    win.onload = function() {
+        win.setTimeout(function() {
+            win.document.body.style.display = 'none';
+            // Accessing offsetHeight forces the browser to recalculate the layout immediately
+            win.document.body.offsetHeight; 
+            win.document.body.style.display = 'flex';           
+            // Dispatch the resize event as a final nudge
+            win.dispatchEvent(new Event('resize'));
+        }, 150);
+    };
     win.focus();
 }
+
 
 
 
