@@ -45,5 +45,7 @@ It displays a color-coded banner (Green for Savings, Amber for Loss) to guide th
 
 ## 📂 Project Structure
 index.html: The input interface and entry point.
+
 style.css: Core layout and responsive design.
+
 script.js: The "Engine" containing calculations, UI templates, and multi-tab logic.
