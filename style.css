@@ -1,90 +1,123 @@
+/* ── Waves canvas — fixed behind everything ───────────────────────────── */
+#wavesCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;        /* behind absolutely everything — no click interference */
+    pointer-events: none;
+}
+
+/* ── Body ─────────────────────────────────────────────────────────────── */
 body {
     font-family: 'Inter', sans-serif;
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
     display: flex;
     justify-content: center;
-    /* Remove align-items: center; (this pushes the top off-screen on small phones) */
-    align-items: flex-start; /* Start from the top */
-    min-height: 100vh; /* Use min-height so it can grow if needed */
+    align-items: flex-start;
+    min-height: 100vh;
     margin: 0;
-    padding: 20px 0; /* Gives space at top and bottom for scrolling */
-}
-header img, img {
-    width: 100%;        
-    max-width: 120px;   
-    height: auto;       
-    display: block;
-    margin: 0 auto 15px auto; 
+    padding: 20px 0;
+    position: relative;
 }
 
+/* ── Image ────────────────────────────────────────────────────────────── */
+header img, img {
+    width: 100%;
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto 15px auto;
+    /* slight shadow so it pops on the glass card */
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+}
+
+/* ── Glass calculator card ────────────────────────────────────────────── */
 .calculator-card {
-    background: white;
-    padding: 20px; /* Reduced padding for mobile */
+    position: relative;
+
+    /* Glass effect */
+    background: rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+
+    padding: 20px;
     border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    
-    /* RESPONSIVE */
-    width: 90%;       /* Default to 90% of screen width */
-    max-width: 400px; /* But never grow larger than 400px */
-    
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+
+    width: 90%;
+    max-width: 400px;
+
     text-align: center;
     animation: slideUp 0.6s ease-out;
 }
 
-/* For very small screens, make the button grid 2 columns instead of 3 */
+/* ── Responsive overrides ─────────────────────────────────────────────── */
 @media (max-width: 350px) {
-    .button-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .button-grid { grid-template-columns: repeat(2, 1fr); }
 }
-/* Specific adjustments for Jio Phone 2 (240px width) */
 @media (max-width: 280px) {
-    .calculator-card {
-        padding: 10px;
-        width: 95%; /* Use more width on tiny screens */
-    }
-    h1 {
-        font-size: 1.2rem; /* Shrink title so it doesn't take up the whole screen */
-    }
-    .button-grid {
-        grid-template-columns: 1fr; /* Stack buttons in 1 column on tiny screens */
-    }
-    .alt-btn {
-        padding: 5px;
-        font-size: 0.75rem;
-    }
+    .calculator-card { padding: 10px; width: 95%; }
+    h1 { font-size: 1.2rem; }
+    .button-grid { grid-template-columns: 1fr; }
+    .alt-btn { padding: 5px; font-size: 0.75rem; }
 }
 
+/* ── Slide-up animation ───────────────────────────────────────────────── */
 @keyframes slideUp {
     from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-h1 { color: #1e3c72; margin: 10px 0 5px 0; }
-p { color: #666; font-size: 0.9rem; }
+/* ── Typography — white/light on glass card ───────────────────────────── */
+h1 {
+    color: #ffffff;
+    margin: 10px 0 5px 0;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.25);
+}
 
+p {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.9rem;
+}
+
+/* ── Input group ─────────────────────────────────────────────────────── */
 .input-group {
     text-align: left;
     margin: 20px 0 10px 0;
 }
 
-label { display: block; font-weight: bold; margin-bottom: 8px; color: #333; }
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.95);
+}
 
 input {
     width: 100%;
     padding: 12px;
-    border: 2px solid #e1e1e1;
+    border: 2px solid rgba(255, 255, 255, 0.35);
     border-radius: 10px;
     box-sizing: border-box;
     font-size: 1.1rem;
     transition: 0.3s;
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
 }
 
-input:focus { border-color: #2a5298; outline: none; }
+input::placeholder { color: rgba(255, 255, 255, 0.5); }
+input:focus {
+    border-color: rgba(255, 255, 255, 0.75);
+    outline: none;
+    background: rgba(255, 255, 255, 0.25);
+}
 
-/* Quick Select Styles */
+/* ── Quick select ─────────────────────────────────────────────────────── */
 .quick-select { margin-bottom: 25px; }
-.quick-select p { margin-bottom: 10px; font-weight: 600; }
+.quick-select p { margin-bottom: 10px; font-weight: 600; color: rgba(255,255,255,0.9); }
 
 .button-grid {
     display: grid;
@@ -93,33 +126,47 @@ input:focus { border-color: #2a5298; outline: none; }
 }
 
 .alt-btn {
-    background: #f8f9fa;
-    border: 1px solid #ddd;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.35);
     padding: 8px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.85rem;
+    color: #ffffff;
+    font-weight: 600;
     transition: 0.2s;
+    backdrop-filter: blur(4px);
 }
 
 .alt-btn:hover {
-    background: #e2e6ea;
-    border-color: #adb5bd;
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.6);
     transform: translateY(-2px);
 }
 
+/* ── Calculate button ─────────────────────────────────────────────────── */
 .main-calc-btn {
     width: 100%;
-    background: #28a745;
+    background: rgba(40, 167, 69, 0.85);
     color: white;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.2);
     padding: 15px;
     border-radius: 10px;
     font-size: 1.1rem;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
+    backdrop-filter: blur(4px);
 }
 
-.main-calc-btn:hover { background: #218838; transform: scale(1.02); }
-.note { font-size: 0.75rem; margin-top: 15px; color: #888; }
+.main-calc-btn:hover {
+    background: rgba(33, 136, 56, 0.95);
+    transform: scale(1.02);
+}
+
+/* ── Footer note ──────────────────────────────────────────────────────── */
+.note {
+    font-size: 0.75rem;
+    margin-top: 15px;
+    color: rgba(255, 255, 255, 0.6);
+}
